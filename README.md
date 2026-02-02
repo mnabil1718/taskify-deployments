@@ -16,7 +16,6 @@ Taskify is a Kanban-based task management application designed to help individua
 ## 🏗 Project Structure
 - `/frontend`: Next.js UI & Components
 - `/backend`: Express API & Business Logic
-- `/database`: Supabase Schema & Migrations
 
 ## 🚦 Getting Started
 1. **Clone the repository**
