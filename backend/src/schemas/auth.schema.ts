@@ -9,21 +9,13 @@ export const passwordSchema = z
     .regex(/[^a-zA-Z0-9]/, { message: "Password must contain a special character" });
 
 export const LoginUserSchema = z.object({
-    email: z.email(),
+    email: z.string(),
     password: z.string(),
 });
 
 export const RegisterUserSchema = z.object({
-    email: z.email(),
-    password: passwordSchema,
+    email: z.string(),
+    password: z.string(),
     password_confirmation: z.string(),
 
-}).superRefine((data, ctx) => {
-    if (data.password !== data.password_confirmation) {
-        ctx.addIssue({
-            code: 'custom',
-            message: 'must match password field',
-            path: ["password_confirmation"],
-        })
-    }
 });

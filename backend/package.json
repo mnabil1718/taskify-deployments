@@ -13,6 +13,7 @@
     "db:seed": "tsx src/lib/prisma/seed.ts",
     "db:migrate": "npx prisma migrate",
     "db:generate": "npx prisma generate",
+    "db:type": "npx supabase gen types typescript --project-id gpvqyfqgurwhbrpqmnqw --schema public > database.types.ts",
     "lint:fix": "npx eslint . --fix",
     "lint": "npx eslint .",
     "purge:uploads": "rm -rf src/public/uploads",
