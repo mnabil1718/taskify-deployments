@@ -1,5 +1,5 @@
-import { ClientError } from "../utils/errors.js";
-import { fail } from "../utils/response.js";
+import { isAuthError } from "@supabase/supabase-js";
+import { ClientError } from "../utils/errors.js"; import { fail } from "../utils/response.js";
 import type { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import multer from "multer";
@@ -11,6 +11,9 @@ export const errorHandler = (err: unknown, req: Request, res: Response, _: NextF
         return res.status(err.statusCode).json(fail(err.message));
     }
 
+    if (isAuthError(err)) {
+        return res.status(err.status ?? StatusCodes.UNAUTHORIZED).json(fail(err.message));
+    }
 
     // multer errors
     if (err instanceof multer.MulterError) {
