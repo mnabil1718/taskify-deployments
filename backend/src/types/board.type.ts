@@ -7,4 +7,4 @@ export type CreateBoardDTO = {
 }
 
 
-export type Board = Tables<"board">;
+export type Board = Tables<"boards">;

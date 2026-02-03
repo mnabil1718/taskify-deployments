@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { config } from '../utils/config.js'
 import type { Database } from '../../database.types.js';
 
@@ -11,3 +11,21 @@ export const supabase = createClient<Database>(config.supabase.site_url!, config
         detectSessionInUrl: false
     }
 });
+
+// auth-aware. easier to work with RLS
+export function authClientFactory(accessToken?: string): SupabaseClient<Database> {
+
+    return createClient<Database>(
+        config.supabase.site_url!,
+        config.supabase.key!,
+        {
+            global: {
+                headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
+            },
+            auth: {
+                persistSession: false,
+            },
+        }
+    );
+
+};

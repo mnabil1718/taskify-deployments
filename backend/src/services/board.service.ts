@@ -1,21 +1,22 @@
-import { supabase } from "../lib/supabase.js";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Board, CreateBoardDTO } from "../types/board.type.js";
+import type { Database } from "../../database.types.js";
 
 
-export async function createBoard(req: CreateBoardDTO): Promise<Board> {
-    const { data, error } = await supabase.from("board").insert({
+export async function createBoard(supabase: SupabaseClient<Database>, req: CreateBoardDTO): Promise<Board> {
+    const { data, error } = await supabase.from("boards").insert({
         title: req.title,
         user_id: req.user_id,
         description: req.description ?? null,
-    }).select().eq("user_id", req.user_id).single();
+    }).select().single();
 
     if (error) throw error;
 
     return data!;
 }
 
-export async function getAllBoards(user_id: string): Promise<Board[]> {
-    const { data, error } = await supabase.from("board").select().eq("user_id", user_id);
+export async function getAllBoards(supabase: SupabaseClient<Database>): Promise<Board[]> {
+    const { data, error } = await supabase.from("boards").select();
 
     if (error) throw error;
 

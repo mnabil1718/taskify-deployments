@@ -14,7 +14,7 @@ export type Database = {
   }
   public: {
     Tables: {
-      board: {
+      boards: {
         Row: {
           created_at: string
           description: string | null
@@ -40,6 +40,82 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      lists: {
+        Row: {
+          board_id: number
+          created_at: string
+          id: number
+          position: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          board_id: number
+          created_at?: string
+          id?: number
+          position: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          board_id?: number
+          created_at?: string
+          id?: number
+          position?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lists_board_id_fkey"
+            columns: ["board_id"]
+            isOneToOne: false
+            referencedRelation: "boards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tasks: {
+        Row: {
+          created_at: string
+          deadline: string | null
+          description: string | null
+          id: number
+          list_id: number
+          position: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          id?: number
+          list_id: number
+          position: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          id?: number
+          list_id?: number
+          position?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasks_list_id_fkey"
+            columns: ["list_id"]
+            isOneToOne: false
+            referencedRelation: "lists"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { AuthenticationError } from "../utils/errors.js";
 import { verifyJWT, type JwtPayload } from "../utils/tokenize.js";
-import { supabase } from "../lib/supabase.js";
+import { authClientFactory, supabase } from "../lib/supabase.js";
 
 export const authenticateCustomJWT = async (req: Request, res: Response, next: NextFunction) => {
     const auth_header = req.headers.authorization;
@@ -34,5 +34,6 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     }
 
     (req as any).user = user;
+    (req as any).supabase = authClientFactory(token);
     next();
 }
