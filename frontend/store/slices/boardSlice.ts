@@ -157,4 +157,8 @@ export const boardSlice = createSlice({
 
 export const { setBoardData, addTask, updateTask, moveTask } = boardSlice.actions;
 export default boardSlice.reducer;
-export const SelectAllTasksbyListId = (list_id: string) => (state: RootState) => state.board.data.tasks.filter((task) => task.column_id === list_id)
+export const SelectAllTasksbyListId = (list_id: string) => (state: RootState) => {
+    // TODO: delete later, temporary debugger
+    console.log("TASKS BROO", state.board.data.tasks);
+    return state.board.data.tasks.filter((task) => task.status === list_id);
+}
