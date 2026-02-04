@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useAppDispatch } from '@/store/hooks';
-import { addTaskAsync } from '@/store/slices/boardSlice';
+import { addTaskAsync, SelectAllTasksbyListId } from '@/store/slices/boardSlice';
 import { toast } from 'sonner';
+import { useSelector } from 'react-redux';
 
 interface CreateTaskModalProps {
     isOpen: boolean;
@@ -21,13 +22,18 @@ export function CreateTaskModal({ isOpen, onClose, columnId }: CreateTaskModalPr
     const [description, setDescription] = useState('');
     const [loading, setLoading] = useState(false);
 
+
+    const tasks = useSelector(SelectAllTasksbyListId(columnId ?? ""))
+
     const handleSubmit = async () => {
         if (!title.trim() || !columnId) return;
+
 
         setLoading(true);
         try {
             await dispatch(addTaskAsync({
                 listId: columnId,
+                position: tasks.length+1,
                 title,
                 description
             })).unwrap();

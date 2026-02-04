@@ -1,7 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { BoardData, Task } from '@/lib/types';
 import { getBoardDetails } from '@/lib/api/board';
-import { createTask as createTaskAPI, updateTask as updateTaskAPI } from '@/lib/api/task';
+import { createTask as createTaskAPI, updateTask as updateTaskAPI, deleteTask as deleteTaskAPI } from '@/lib/api/task';
+import { RootState } from '..';
+
 
 interface BoardState {
     data: BoardData;
@@ -25,8 +27,8 @@ export const fetchBoardData = createAsyncThunk(
 
 export const addTaskAsync = createAsyncThunk(
     'board/addTask',
-    async ({ listId, title, description }: { listId: string; title: string, description?: string }) => {
-        const newTask = await createTaskAPI(listId, title, description);
+    async ({ listId, position, title, description }: { listId: string; position: number; title: string, description?: string }) => {
+        const newTask = await createTaskAPI(listId, position, title, description);
         return newTask;
     }
 );
@@ -45,6 +47,14 @@ export const moveTaskAsync = createAsyncThunk(
         // newStatus is the new column ID (which maps to list_id in backend)
         await updateTaskAPI(taskId, { list_id: Number(newStatus) });
         return { taskId, newStatus };
+    }
+);
+
+export const deleteTaskAsync = createAsyncThunk(
+    'board/deleteTask',
+    async (taskId: string) => {
+        await deleteTaskAPI(taskId);
+        return taskId;
     }
 );
 
@@ -105,6 +115,7 @@ export const boardSlice = createSlice({
                 const apiTask = action.payload;
                 const newTask: Task = {
                     id: apiTask.id.toString(),
+                    column_id: apiTask.list_id,
                     title: apiTask.title,
                     description: apiTask.description,
                     status: apiTask.list_id.toString(), // Map list_id to status/columnId
@@ -136,9 +147,14 @@ export const boardSlice = createSlice({
                     // We might need to resort tasks here if the selector doesn't sort them, 
                     // but usually components handle sorting or selector does.
                 }
+            })
+            .addCase(deleteTaskAsync.fulfilled, (state, action) => {
+                const taskId = action.payload;
+                state.data.tasks = state.data.tasks.filter((t) => t.id !== taskId);
             });
     },
 });
 
 export const { setBoardData, addTask, updateTask, moveTask } = boardSlice.actions;
 export default boardSlice.reducer;
+export const SelectAllTasksbyListId = (list_id: string) => (state: RootState) => state.board.data.tasks.filter((task) => task.column_id === list_id)

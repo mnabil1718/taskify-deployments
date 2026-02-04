@@ -120,9 +120,9 @@ export function KanbanBoard({ boardId }: KanbanBoardProps) {
                             const next = reordered[newColIndex + 1];
 
                             let newPos = 0;
-                            if (!prev && !next) newPos = 1000; // Only item?
+                            if (!prev && !next) newPos = 1; // Only item?
                             else if (!prev) newPos = next.position / 2; // Start
-                            else if (!next) newPos = prev.position + 1000; // End
+                            else if (!next) newPos = prev.position + 1; // End
                             else newPos = (prev.position + next.position) / 2; // Middle
 
                             dispatch(reorderTaskAsync({ taskId: activeId as string, position: newPos }));

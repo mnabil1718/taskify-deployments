@@ -2,6 +2,17 @@
 
 import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@/components/ui/dialog';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -9,7 +20,7 @@ import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Task } from '@/lib/types';
 import { useAppDispatch } from '@/store/hooks';
-import { updateTaskAsync } from '@/store/slices/boardSlice';
+import { updateTaskAsync, deleteTaskAsync } from '@/store/slices/boardSlice';
 import { Clock, Tag, AlignLeft, Calendar, User } from 'lucide-react';
 
 interface TaskDetailModalProps {
@@ -37,6 +48,12 @@ export function TaskDetailModal({ isOpen, onClose, task }: TaskDetailModalProps)
             id: task.id,
             changes: { title, description }
         }));
+        onClose();
+    };
+
+    const handleDelete = () => {
+        if (!task) return;
+        dispatch(deleteTaskAsync(task.id));
         onClose();
     };
 
@@ -141,6 +158,32 @@ export function TaskDetailModal({ isOpen, onClose, task }: TaskDetailModalProps)
                                     <Button variant="outline" onClick={onClose} className="w-full border-slate-200 text-slate-500 hover:text-slate-700">
                                         Cancel
                                     </Button>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button
+                                                variant="outline"
+                                                className="w-full border-red-200 text-red-500 hover:bg-red-50 hover:text-red-700 hover:border-red-300"
+                                            >
+                                                Delete Task
+                                            </Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    This action cannot be undone. This will permanently delete the task
+                                                    <span className="font-semibold text-slate-900"> "{task.title}" </span>
+                                                    and remove it from our servers.
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700 text-white border-red-600 hover:border-red-700">
+                                                    Delete
+                                                </AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
                                 </div>
                             </div>
                         </div>

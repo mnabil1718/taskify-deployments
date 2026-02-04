@@ -10,6 +10,7 @@ export interface Task {
   dueDate?: string;
   assignee?: string; // URL to avatar or name
   position: number;
+  column_id: string;
 }
 
 export interface Column {
