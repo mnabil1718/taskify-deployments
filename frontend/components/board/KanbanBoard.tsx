@@ -130,7 +130,7 @@ export function KanbanBoard({ boardId }: KanbanBoardProps) {
       const overIndex = targetTasks.findIndex((t) => t.id === overTask.id);
       const isLast = overIndex === targetTasks.length - 1;
 
-      // 👇 append instead of insert-before
+      // append instead of insert-before
       if (isLast) {
         const lastRank = targetTasks.at(-1)?.rank ?? null;
         const [newRank, ok] = lexorank.insert(lastRank, null);
