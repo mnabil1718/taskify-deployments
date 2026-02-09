@@ -7,3 +7,6 @@ export type CreateListDTO = {
     board_id: number;
     position: number;
 }
+
+
+export type UpdateListDTO = CreateListDTO & { id: number };
