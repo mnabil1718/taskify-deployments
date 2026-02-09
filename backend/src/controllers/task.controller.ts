@@ -42,7 +42,7 @@ export const deleteTasks = async (req: Request, res: Response) => {
     const { id } = req.params;
     const taskId = Number(id);
 
-    const old = await getTaskById(supabase, taskId);
+    await getTaskById(supabase, taskId);
 
     const task = await deleteTask(supabase, taskId);
 

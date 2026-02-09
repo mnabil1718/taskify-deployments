@@ -1,7 +1,8 @@
 import type { Request, Response } from "express";
-import { createBoard, getAllBoards, getBoardById } from "../services/board.service.js";
+import { createBoard, deleteBoard, getAllBoards, getBoardById, updateBoard } from "../services/board.service.js";
 import { StatusCodes } from "http-status-codes";
 import { success } from "../utils/response.js";
+import type { UpdateBoardDTO } from "../types/board.type.js";
 
 
 export const postBoards = async (req: Request, res: Response) => {
@@ -37,5 +38,41 @@ export const getBoardsById = async (req: Request, res: Response) => {
     const board = await getBoardById(client, Number(id));
 
     res.status(StatusCodes.OK).json(success("Board fetched successfully", board));
+}
+
+
+export const putBoards = async (req: Request, res: Response) => {
+    const supabase = (req as any).supabase;
+    const { id } = req.params;
+    const boardId = Number(id);
+
+    const old = await getBoardById(supabase, boardId);
+
+    const { user_id, description, title } = req.body;
+
+    const request: UpdateBoardDTO = {
+        id: old.id,
+        user_id: user_id ?? old.user_id,
+        description: description ?? old.description,
+        title: title ?? old.title,
+    };
+
+    const b = await updateBoard(supabase, request);
+
+    res.status(StatusCodes.OK).json(success("Board updated successfully", b));
+}
+
+
+export const deleteBoards = async (req: Request, res: Response) => {
+
+    const supabase = (req as any).supabase;
+    const { id } = req.params;
+    const boardId = Number(id);
+
+    await getBoardById(supabase, boardId);
+
+    const b = await deleteBoard(supabase, boardId);
+
+    res.status(StatusCodes.OK).json(success("Board deleted successfully", b));
 }
 

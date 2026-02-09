@@ -9,6 +9,10 @@ export type CreateBoardDTO = {
     description?: string;
 }
 
+export type UpdateBoardDTO = CreateBoardDTO & {
+    id: number;
+}
+
 
 export type Board = Tables<"boards">;
 
