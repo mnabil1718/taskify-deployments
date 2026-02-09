@@ -17,11 +17,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+
 import { Task } from "@/lib/types";
 import { useAppDispatch } from "@/store/hooks";
 import { updateTaskAsync, deleteTaskAsync } from "@/store/slices/boardSlice";
-import { Clock, Tag, AlignLeft, Calendar, User } from "lucide-react";
+import { Tag, AlignLeft, Calendar } from "lucide-react";
 
 interface TaskDetailModalProps {
   isOpen: boolean;
@@ -109,24 +109,7 @@ export function TaskDetailModal({
                 />
               </div>
 
-              {/* Activity */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 text-slate-700 font-semibold px-1">
-                  <Clock size={18} />
-                  <h3>Activity</h3>
-                </div>
-                <div className="flex gap-3 px-1">
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback className="bg-indigo-100 text-indigo-600 font-bold text-xs">
-                      JD
-                    </AvatarFallback>
-                  </Avatar>
-                  <Input
-                    placeholder="Write a comment..."
-                    className="bg-white shadow-none"
-                  />
-                </div>
-              </div>
+
             </div>
           </div>
 
@@ -152,13 +135,6 @@ export function TaskDetailModal({
                     <Calendar size={16} />
                     Due Date
                   </Button>
-                  <Button
-                    variant="outline"
-                    className="justify-start gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-100 shadow-sm h-9"
-                  >
-                    <User size={16} />
-                    Members
-                  </Button>
                 </div>
               </div>
 
@@ -175,13 +151,7 @@ export function TaskDetailModal({
                   >
                     Save Changes
                   </Button>
-                  <Button
-                    variant="outline"
-                    onClick={onClose}
-                    className="w-full border-slate-200 text-slate-500 hover:text-slate-700"
-                  >
-                    Cancel
-                  </Button>
+
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button

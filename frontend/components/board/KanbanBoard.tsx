@@ -6,13 +6,15 @@ import {
   DragOverlay,
   useSensors,
   useSensor,
-  PointerSensor,
+  MouseSensor,
   DragStartEvent,
   DragOverEvent,
   DragEndEvent,
   closestCorners,
+  TouchSensor,
+  KeyboardSensor,
 } from "@dnd-kit/core";
-import { SortableContext } from "@dnd-kit/sortable";
+import { SortableContext, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
 import { BoardColumn } from "./BoardColumn";
 import { TaskCard } from "./TaskCard";
@@ -44,11 +46,20 @@ export function KanbanBoard({ boardId }: KanbanBoardProps) {
   const columnIds = useMemo(() => columns.map((col) => col.id), [columns]);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, {
+    useSensor(MouseSensor, {
       activationConstraint: {
         distance: 10,
       },
     }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
   );
 
   function onDragStart(event: DragStartEvent) {
@@ -174,7 +185,7 @@ export function KanbanBoard({ boardId }: KanbanBoardProps) {
 
   return (
     <>
-      <div className="flex h-full w-full gap-6 overflow-x-auto pb-4 pt-2">
+      <div className="flex h-full w-full flex-col md:flex-row gap-6 md:overflow-x-auto pb-4 pt-2 snap-y md:snap-x snap-mandatory">
         <DndContext
           sensors={sensors}
           onDragStart={onDragStart}
@@ -182,7 +193,7 @@ export function KanbanBoard({ boardId }: KanbanBoardProps) {
           onDragOver={onDragOver}
           collisionDetection={closestCorners}
         >
-          <div className="flex gap-6">
+          <div className="flex flex-col md:flex-row gap-6 w-full h-full">
             <SortableContext items={columnIds}>
               {columns.map((col) => (
                 <BoardColumn
@@ -214,8 +225,8 @@ export function KanbanBoard({ boardId }: KanbanBoardProps) {
                   tasks={tasks.filter(
                     (task) => task.columnId === Number(activeColumn.id),
                   )}
-                  createTask={() => {}}
-                  onTaskClick={() => {}}
+                  createTask={() => { }}
+                  onTaskClick={() => { }}
                 />
               )}
               {activeTask && <TaskCard task={activeTask} />}

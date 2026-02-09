@@ -72,7 +72,7 @@ export default function DashboardPage() {
   }, [dispatch]);
 
   return (
-    <div className="flex h-[calc(100vh-8rem)] flex-col gap-4">
+    <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight text-gray-900">
           My Project Board

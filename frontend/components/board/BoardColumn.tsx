@@ -60,14 +60,14 @@ export function BoardColumn({
     <div
       ref={setNodeRef}
       style={style}
-      className="flex h-full w-80 shrink-0 flex-col gap-4 rounded-3xl bg-slate-50/50 p-2 ring-1 ring-slate-200/50"
+      className="flex h-fit md:h-full w-full md:w-80 shrink-0 flex-col gap-4 rounded-3xl bg-slate-50/50 p-2 ring-1 ring-slate-200/50 md:snap-center"
     >
-      <div
-        {...attributes}
-        {...listeners}
-        className="flex cursor-grab items-center justify-between rounded-xl px-2 py-1 transition-colors hover:bg-slate-100/50"
-      >
-        <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between px-2 py-1">
+        <div
+          {...attributes}
+          {...listeners}
+          className="flex flex-1 cursor-grab items-center gap-2 rounded-xl py-1 transition-colors hover:bg-slate-100/50"
+        >
           <h3 className="font-bold text-slate-700">{column.title}</h3>
           <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-slate-200/60 px-1.5 text-xs font-bold text-slate-600">
             {tasks.length}
@@ -86,7 +86,7 @@ export function BoardColumn({
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col gap-3 overflow-y-auto px-1 pb-4 scrollbar-hide">
+      <div className="flex flex-1 flex-col gap-3 md:overflow-y-auto px-1 pb-4 scrollbar-hide">
         <SortableContext items={taskIds}>
           {tasks.map((task) => (
             <TaskCard
