@@ -51,7 +51,7 @@ export default function BoardPage() {
     }
 
     return (
-        <div className="flex flex-col h-full bg-slate-50/50">
+        <div className="flex flex-col h-full">
             <BoardHeader boardId={boardId} title={title} />
             <div className="flex-1 overflow-hidden">
                 <KanbanBoard boardId={boardId} />

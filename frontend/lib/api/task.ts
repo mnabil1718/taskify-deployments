@@ -17,11 +17,12 @@ export async function createTask(listId: number, rank: string, title: string, de
 
 export async function updateTask(taskId: string, updates: Partial<Task>) {
     // Map frontend dueDate to backend deadline
-    const { dueDate, ...rest } = updates;
+    // Map frontend fields to backend fields
+    const { dueDate, columnId, ...rest } = updates;
     const payload = {
         ...rest,
-        // If we explicitly want to set it to null (remove), we need to check if key exists
         ...("dueDate" in updates ? { deadline: dueDate } : {}),
+        ...("columnId" in updates ? { list_id: columnId } : {}),
     };
 
     const response = await apiFetch(`/tasks/${taskId}`, {
