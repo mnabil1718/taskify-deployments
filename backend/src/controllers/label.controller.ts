@@ -39,7 +39,8 @@ export const deleteLabels = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).json(success("Label deleted successfully", label));
 }
 
-export const getLabels = async (req: Request, res: Response) => {
+
+export const getLabelsByTaskId = async (req: Request, res: Response) => {
     const supabase = (req as any).supabase;
     const { id } = req.params;
     const taskId = Number(id);
@@ -51,8 +52,10 @@ export const getLabels = async (req: Request, res: Response) => {
 export const searchLabels = async (req: Request, res: Response) => {
     const supabase = (req as any).supabase;
     const query = req.query.search;
+    const taskId = req.query.taskId ? Number(req.query.taskId) : null;
+    const boardId = req.query.boardId ? Number(req.query.boardId) : null;
 
-    const labels = await searchLabelByTitle(supabase, query as string);
+    const labels = await searchLabelByTitle(supabase, query as string, taskId, boardId);
     res.status(StatusCodes.OK).json(success("Labels fetched successfully", labels));
 }
 

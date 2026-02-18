@@ -43,11 +43,30 @@ export async function getLabelById(supabase: SupabaseClient<Database>, id: numbe
     return data;
 }
 
-export async function searchLabelByTitle(supabase: SupabaseClient<Database>, title: string): Promise<Label[]> {
-    let builder = supabase.from("labels").select();
+export async function searchLabelByTitle(supabase: SupabaseClient<Database>, title: string | null, taskId: number | null, boardId: number | null): Promise<Label[]> {
+    let builder = supabase
+        .from("labels")
+        .select(`
+            *,
+            tasks!inner (
+                id,
+                lists!inner (
+                    id,
+                    board_id
+                )
+            )
+        `);
 
     if (title) {
         builder = builder.ilike("title", `%${title}%`);
+    }
+
+    if (taskId) {
+        builder = builder.eq("task_id", taskId);
+    }
+
+    if (boardId) {
+        builder = builder.eq("tasks.lists.board_id", boardId);
     }
 
     const { data, error } = await builder;
@@ -64,3 +83,4 @@ export async function getAllLabelByTaskId(supabase: SupabaseClient<Database>, ta
 
     return data!;
 }
+
