@@ -21,11 +21,16 @@ export type Board = Tables<"boards">;
 const boardQuery = supabase
     .from("boards")
     .select(`
-    *,
-    lists (
-      *,
-      tasks (*)
-    )
+          *,
+          lists (
+            *,
+            tasks (
+              *,
+              labels:task_labels (
+                ...labels (*)
+              )
+            )
+          )
   `).maybeSingle();
 
 export type BoardWithDetails = QueryData<typeof boardQuery>;

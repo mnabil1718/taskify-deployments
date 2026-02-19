@@ -1,13 +1,11 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "../../database.types.js";
-import type { CreateLabelDTO, Label, UpdateLabelDTO } from "../types/label.type.js";
-import { supabase } from "../lib/supabase.js";
+import type { Label } from "../types/label.type.js";
 import { NotFoundError } from "../utils/errors.js";
 
-export async function createLabel(supabase: SupabaseClient<Database>, req: CreateLabelDTO): Promise<Label> {
+export async function createLabel(supabase: SupabaseClient<Database>, req: { title: string, color: string }): Promise<Label> {
     const { data, error } = await supabase.from("labels").insert({
         title: req.title,
-        task_id: req.task_id,
         color: req.color,
     }).select().single();
 
@@ -16,10 +14,8 @@ export async function createLabel(supabase: SupabaseClient<Database>, req: Creat
     return data!;
 }
 
-export async function updateLabel(supabase: SupabaseClient<Database>, req: UpdateLabelDTO): Promise<Label> {
-
+export async function updateLabel(supabase: SupabaseClient<Database>, req: Label): Promise<Label> {
     const { data, error } = await supabase.from("labels").update({
-        task_id: req.task_id,
         title: req.title,
         color: req.color,
     }).eq("id", req.id).select().single();
@@ -37,50 +33,20 @@ export async function deleteLabel(supabase: SupabaseClient<Database>, id: number
 export async function getLabelById(supabase: SupabaseClient<Database>, id: number): Promise<Label> {
     const { data, error } = await supabase.from("labels").select().eq("id", id).maybeSingle();
     if (error) throw error;
-
     if (!data) throw new NotFoundError("Label not found");
-
     return data;
 }
 
-export async function searchLabelByTitle(supabase: SupabaseClient<Database>, title: string | null, taskId: number | null, boardId: number | null): Promise<Label[]> {
-    let builder = supabase
-        .from("labels")
-        .select(`
-            *,
-            tasks!inner (
-                id,
-                lists!inner (
-                    id,
-                    board_id
-                )
-            )
-        `);
+export async function getAllLabel(supabase: SupabaseClient<Database>, title: string | null): Promise<Label[]> {
 
-    if (title) {
-        builder = builder.ilike("title", `%${title}%`);
+    let query = supabase.from("labels").select();
+
+    if (title && title.trim()) {
+        query = query.ilike("title", `%${title.trim()}%`)
     }
 
-    if (taskId) {
-        builder = builder.eq("task_id", taskId);
-    }
-
-    if (boardId) {
-        builder = builder.eq("tasks.lists.board_id", boardId);
-    }
-
-    const { data, error } = await builder;
-
+    const { data, error } = await query;
     if (error) throw error;
-
     return data || [];
-}
-
-export async function getAllLabelByTaskId(supabase: SupabaseClient<Database>, task_id: number): Promise<Label[]> {
-    const { data, error } = await supabase.from("labels").select().eq("task_id", task_id).order("created_at", { ascending: true });
-
-    if (error) throw error;
-
-    return data!;
-}
+} 
 

@@ -1,4 +1,3 @@
 import type { Tables } from "../../database.types.js";
 
-export type Label = Tables<"labels">;
-
+export type TaskLabel = Tables<"task_labels">

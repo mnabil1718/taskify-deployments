@@ -1,4 +1,5 @@
 import type { Tables } from "../../database.types.js";
+import type { Label } from "./label.type.js";
 
 export type Task = Tables<"tasks">;
 
@@ -19,3 +20,7 @@ export type UpdateTaskDTO = {
     deadline: string;
 }
 
+
+export type TaskWitLabels = Task & {
+    labels: Label[];
+};
