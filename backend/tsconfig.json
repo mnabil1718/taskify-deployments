@@ -5,9 +5,6 @@
     "rootDir": "./src",
     "outDir": "./dist",
 
-    "include": ["src/**/*"],
-    "exclude": ["node_modules", "dist", "eslint.config.ts"],
-
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
     "module": "nodenext",
@@ -43,5 +40,7 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-  }
+  },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "dist", "eslint.config.ts"],
 }
