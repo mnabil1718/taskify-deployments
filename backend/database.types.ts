@@ -46,32 +46,21 @@ export type Database = {
           color: string
           created_at: string
           id: number
-          task_id: number
           title: string
         }
         Insert: {
           color: string
           created_at?: string
           id?: number
-          task_id: number
           title: string
         }
         Update: {
           color?: string
           created_at?: string
           id?: number
-          task_id?: number
           title?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "labels_task_id_fkey"
-            columns: ["task_id"]
-            isOneToOne: false
-            referencedRelation: "tasks"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       lists: {
         Row: {
@@ -108,6 +97,66 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          created_at: string
+          id: number
+          is_seen: boolean
+          test: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          is_seen?: boolean
+          test: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          is_seen?: boolean
+          test?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      task_labels: {
+        Row: {
+          created_at: string
+          id: number
+          label_id: number
+          task_id: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          label_id: number
+          task_id: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          label_id?: number
+          task_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_labels_label_id_fkey"
+            columns: ["label_id"]
+            isOneToOne: false
+            referencedRelation: "labels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "task_labels_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tasks: {
         Row: {
           created_at: string
@@ -115,7 +164,7 @@ export type Database = {
           description: string | null
           id: number
           list_id: number
-          rank: string
+          position: string
           title: string
           updated_at: string
         }
@@ -125,7 +174,7 @@ export type Database = {
           description?: string | null
           id?: number
           list_id: number
-          rank: string
+          position: string
           title: string
           updated_at?: string
         }
@@ -135,7 +184,7 @@ export type Database = {
           description?: string | null
           id?: number
           list_id?: number
-          rank?: string
+          position?: string
           title?: string
           updated_at?: string
         }

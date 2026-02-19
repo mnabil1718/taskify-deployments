@@ -35,7 +35,15 @@ export const getBoards = async (req: Request, res: Response) => {
 export const getBoardsById = async (req: Request, res: Response) => {
     const client = (req as any).supabase;
     const { id } = req.params;
-    const board = await getBoardById(client, Number(id));
+
+    const title = typeof req.query.search === 'string' ? req.query.search : "";
+
+    // Convert "1,4" into [1, 4]
+    const labelIds = typeof req.query.labels === 'string'
+        ? req.query.labels.split(',').map(Number).filter(n => !isNaN(n))
+        : [];
+
+    const board = await getBoardById(client, Number(id), title, labelIds);
 
     res.status(StatusCodes.OK).json(success("Board fetched successfully", board));
 }

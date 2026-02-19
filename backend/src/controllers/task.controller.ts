@@ -3,6 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import { success } from "../utils/response.js";
 import { createTask, deleteTask, getAllTaskByListId, getTaskById, updateTask } from "../services/task.service.js";
 import type { UpdateTaskDTO } from "../types/task.type.js";
+import type { SortFilter } from "../types/filter.type.js";
 
 export const postTasks = async (req: Request, res: Response) => {
     const supabase = (req as any).supabase;
@@ -26,7 +27,7 @@ export const putTasks = async (req: Request, res: Response) => {
     const request: UpdateTaskDTO = {
         id: old.id,
         list_id: list_id ?? old.list_id,
-        rank: rank ?? old.rank,
+        rank: rank ?? old.position,
         title: title ?? old.title,
         description: description,
         deadline: deadline,
@@ -53,12 +54,32 @@ export const deleteTasks = async (req: Request, res: Response) => {
 
 
 
-export const getTasks = async (req: Request, res: Response) => {
+export const getTasksForList = async (req: Request, res: Response) => {
     const supabase = (req as any).supabase;
     const { id } = req.params;
     const listId = Number(id);
 
-    const tasks = await getAllTaskByListId(supabase, listId);
+    const sortQuery = typeof req.query.sort === "string" ? req.query.sort.split(":") : undefined;
+    let sort: SortFilter | undefined = undefined;
+
+    if (sortQuery) {
+        sort = {
+            column: sortQuery[0] ?? "",
+            ascending: sortQuery[1] === "asc" ? true : false,
+        }
+    }
+
+    const tasks = await getAllTaskByListId(supabase, listId, sort);
 
     res.status(StatusCodes.OK).json(success("Tasks fetched successfully", tasks));
+}
+
+
+export const getTasksForBoard = async (req: Request, res: Response) => {
+    const supabase = (req as any).supabase;
+    const { id } = req.params;
+    const boardId = Number(id);
+
+    // TODO: filter query
+    const labels = req.query;
 }
