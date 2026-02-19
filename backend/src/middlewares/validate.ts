@@ -26,7 +26,7 @@ export function validateQuery<T extends z.ZodTypeAny>(schema: T) {
         if (!result.success) {
             const msgs: Record<string, string> = formatZodErrorsAsObject(result.error);
             const code = StatusCodes.BAD_REQUEST;
-            return res.status(code).json(fail(code, "query string validation failed", msgs));
+            return res.status(code).json(fail("query string validation failed", msgs));
 
         } else {
             next();
