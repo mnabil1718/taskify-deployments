@@ -21,18 +21,26 @@ export async function createTask(supabase: SupabaseClient<Database>, req: Create
     return data!;
 }
 
-export async function updateTask(supabase: SupabaseClient<Database>, req: UpdateTaskDTO): Promise<Task> {
-
-    const { data, error } = await supabase.from("tasks").update({
-        list_id: req.list_id,
-        position: req.rank,
-        title: req.title,
-        description: req.description,
-        deadline: req.deadline,
-    }).eq("id", req.id).select().single();
-
+export async function updateTask(supabase: SupabaseClient<Database>, req: UpdateTaskDTO): Promise<TaskWitLabels> {
+    const { data, error } = await supabase
+        .from("tasks")
+        .update({
+            list_id: req.list_id,
+            position: req.rank,
+            title: req.title,
+            description: req.description,
+            deadline: req.deadline,
+        })
+        .eq("id", req.id)
+        .select(`
+            *,
+            labels:task_labels (
+                ...labels (*)
+            )
+        `)
+        .single();
     if (error) throw error;
-    return data!;
+    return data as unknown as TaskWitLabels;
 }
 
 export async function deleteTask(supabase: SupabaseClient<Database>, id: number): Promise<Task> {
