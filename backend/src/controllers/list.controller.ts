@@ -13,15 +13,15 @@ export const postLists = async (req: Request, res: Response) => {
 
 
     // Ignore request position, calculate from DB
-    const last = await getLastList(supabase, board_id);
+    // const last = await getLastList(supabase, board_id);
 
-    const pos = (last.position ?? 0) + 1;
+    // const pos = (last.position ?? 0) + 1;
 
     const list = await createList(supabase,
         {
             title,
             board_id,
-            position: pos,
+            position,
         });
 
     res.status(StatusCodes.CREATED).json(success("List created successfully", list));
