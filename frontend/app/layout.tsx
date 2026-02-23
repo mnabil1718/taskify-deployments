@@ -4,8 +4,6 @@ import StoreProvider from "@/components/providers/StoreProvider";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
-import { ThemeProvider } from "@/components/providers/ThemeProvider";
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
