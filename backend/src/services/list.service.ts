@@ -47,13 +47,12 @@ export async function getAllListByBoardId(supabase: SupabaseClient<Database>, bo
     return data!;
 }
 
-export async function getLastList(supabase: SupabaseClient<Database>, board_id: number): Promise<List> {
+export async function getLastList(supabase: SupabaseClient<Database>, board_id: number): Promise<List | undefined> {
     const { data, error } = await supabase.from("lists").select().eq("board_id", board_id).order("position", { ascending: false }).limit(1).single();
 
     if (error) throw error;
-    if (!data) throw new Error("List not found")
 
-    return data;
+    return data || undefined;
 }
 
 export async function deleteList(supabase: SupabaseClient<Database>, id: number): Promise<List> {
