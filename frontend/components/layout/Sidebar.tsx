@@ -87,14 +87,31 @@ export function Sidebar() {
                         </nav>
                     </div>
 
-                    <div>
+                    <div className="mt-auto pt-6 px-3 flex flex-col gap-4">
+                        {/* Sign Out Button */}
                         <button
                             onClick={handleLogout}
-                            className="group flex w-full items-center rounded-lg px-3 py-2.5 text-sm font-medium text-slate-400 transition-colors hover:bg-red-500/10 hover:text-red-400"
+                            className="group flex w-full items-center rounded-lg px-3 py-2.5 text-sm font-medium text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all duration-200"
                         >
-                            <LogOut size={20} className="mr-3 text-slate-500 transition-colors group-hover:text-red-400" />
+                            <LogOut size={20} className="mr-3 text-slate-500 group-hover:text-red-400" />
                             Sign Out
                         </button>
+
+                        {/* Professional Footer */}
+                        <div className="rounded-xl bg-slate-800/50 p-4 border border-slate-800/50">
+                            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">
+                                Taskify v1.0
+                            </p>
+                            <p className="text-[10px] text-slate-500 leading-relaxed">
+                                &copy; 2026 Taskify. All rights reserved.
+                            </p>
+                            <div className="mt-3 flex items-center gap-2 pt-3 border-t border-slate-800/50">
+                                <div className="h-1.5 w-1.5 rounded-full bg-indigo-500 animate-pulse" />
+                                <p className="text-[10px] font-medium text-slate-400">
+                                    Developed by <span className="text-indigo-400">Taskify Team</span>
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </aside>

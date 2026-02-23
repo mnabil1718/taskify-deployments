@@ -1,6 +1,6 @@
 'use client';
 
-import { User, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { useSidebar } from '@/components/providers/SidebarProvider';
 import { NotificationPopover } from './NotificationPopover';
 
@@ -16,16 +16,16 @@ export function Navbar() {
                 >
                     <Menu size={24} />
                 </button>
+
+                <div className="hidden md:flex md:items-center">
+                    <span className="text-sm font-medium text-slate-500 bg-slate-50 px-3 py-1 rounded-full border border-slate-200/50">
+                        Ready to get things done?
+                    </span>
+                </div>
             </div>
 
             <div className="flex items-center gap-4">
                 <NotificationPopover />
-
-                <div className="flex items-center gap-3 border-l border-gray-200 pl-4">
-                    <div className="h-9 w-9 rounded-full bg-gradient-to-tr from-indigo-100 to-violet-100 flex items-center justify-center text-indigo-600 ring-2 ring-white shadow-sm cursor-pointer hover:shadow-md transition-shadow">
-                        <User size={18} />
-                    </div>
-                </div>
             </div>
         </header>
     );

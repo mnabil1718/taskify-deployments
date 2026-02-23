@@ -1,10 +1,10 @@
 import { apiFetch } from "./client";
 
 export type RegisterRequestDTO = {
-    full_name: string;
-    email: string;
-    password: string;
-    password_confirmation: string;
+  full_name: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
 };
 
 export async function login(email: string, password: string) {
@@ -17,6 +17,9 @@ export async function login(email: string, password: string) {
   // We need to access data.data.session.access_token
   if (data.data?.session?.access_token) {
     localStorage.setItem("token", data.data.session.access_token);
+    if (data.data.user?.user_metadata?.full_name) {
+      localStorage.setItem("username", data.data.user.user_metadata.full_name);
+    }
   } else {
     console.error("Login failed: No access token received", data);
     throw new Error("No access token received");
