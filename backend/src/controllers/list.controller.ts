@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { createList, deleteList, getAllListByBoardId, getListById, updateList } from "../services/list.service.js";
+import { createList, deleteList, getAllListByBoardId, getLastList, getListById, updateList } from "../services/list.service.js";
 import { StatusCodes } from "http-status-codes";
 import { success } from "../utils/response.js";
 import type { UpdateListDTO } from "../types/list.type.js";
@@ -11,11 +11,16 @@ export const postLists = async (req: Request, res: Response) => {
     const supabase = (req as any).supabase;
     const { title, board_id, position } = req.body;
 
+    // Ignore request position, calculate from DB
+    const last = await getLastList(supabase, board_id);
+
+    const pos = (last.position ?? 0) + 1;
+
     const list = await createList(supabase,
         {
             title,
             board_id,
-            position,
+            position: pos,
         });
 
     res.status(StatusCodes.CREATED).json(success("List created successfully", list));
