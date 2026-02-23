@@ -8,54 +8,35 @@ import { Input } from "@/components/ui/input";
 import {
     getNotificationSettings,
     updateNotificationSettings,
-    getNotifications,
-    markSeen,
     Notification,
 } from "@/lib/api/notifications";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { formatFullDate, formatRelativeTime, formatMessageDates } from "@/lib/format";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { fetchNotificationsAsync, markSeenAsync } from "@/store/slices/notificationSlice";
 
 type Tab = "inbox" | "settings";
 
-function timeAgo(dateStr: string): string {
-    const diff = Date.now() - new Date(dateStr).getTime();
-    const mins = Math.floor(diff / 60000);
-    if (mins < 1) return "just now";
-    if (mins < 60) return `${mins}m ago`;
-    const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return `${hrs}h ago`;
-    return `${Math.floor(hrs / 24)}d ago`;
-}
-
 export function NotificationPopover() {
+    const dispatch = useAppDispatch();
     const [open, setOpen] = useState(false);
     const [tab, setTab] = useState<Tab>("inbox");
 
-    // --- Inbox state ---
-    const [notifications, setNotifications] = useState<Notification[]>([]);
-    const [inboxLoading, setInboxLoading] = useState(false);
-    const [inboxError, setInboxError] = useState(false);
+    // --- Redux State ---
+    const { notifications, loading: inboxLoading, error: inboxError } = useAppSelector((state) => state.notifications);
 
-    // --- Settings state ---
+    // --- Settings local state (still local as it doesn't need to be global for now) ---
     const [days, setDays] = useState<number>(1);
     const [settingsLoading, setSettingsLoading] = useState(false);
     const [saving, setSaving] = useState(false);
 
     const unreadCount = notifications.filter((n) => !n.is_seen).length;
 
-    // Load inbox
+    // Load inbox via Redux
     const loadInbox = useCallback(async () => {
-        setInboxLoading(true);
-        setInboxError(false);
-        try {
-            const data = await getNotifications();
-            setNotifications(data);
-        } catch {
-            setInboxError(true);
-        } finally {
-            setInboxLoading(false);
-        }
-    }, []);
+        dispatch(fetchNotificationsAsync());
+    }, [dispatch]);
 
     // Load settings
     const loadSettings = useCallback(async () => {
@@ -78,26 +59,16 @@ export function NotificationPopover() {
 
     // Mark one as seen
     const handleMarkSeen = async (id: number) => {
-        setNotifications((prev) =>
-            prev.map((n) => (n.id === id ? { ...n, is_seen: true } : n))
-        );
-        try {
-            await markSeen(id);
-        } catch {
-            // Revert on failure
-            setNotifications((prev) =>
-                prev.map((n) => (n.id === id ? { ...n, is_seen: false } : n))
-            );
-        }
+        dispatch(markSeenAsync(id));
     };
 
     // Mark all as seen
     const handleMarkAllSeen = async () => {
         const unseen = notifications.filter((n) => !n.is_seen);
         if (!unseen.length) return;
-        setNotifications((prev) => prev.map((n) => ({ ...n, is_seen: true })));
+
         try {
-            await Promise.all(unseen.map((n) => markSeen(n.id)));
+            await Promise.all(unseen.map((n) => dispatch(markSeenAsync(n.id))));
         } catch {
             toast.error("Failed to mark all as read");
             loadInbox(); // refetch to correct state
@@ -228,10 +199,10 @@ export function NotificationPopover() {
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <p className="text-xs text-slate-700 leading-relaxed">
-                                                {n.text}
+                                                {formatMessageDates(n.text)}
                                             </p>
-                                            <p className="text-[10px] text-slate-400 mt-0.5">
-                                                {timeAgo(n.created_at)}
+                                            <p className="text-[10px] text-slate-400 mt-0.5" title={formatFullDate(n.created_at)}>
+                                                {formatRelativeTime(n.created_at)}
                                             </p>
                                         </div>
                                         {!n.is_seen && (

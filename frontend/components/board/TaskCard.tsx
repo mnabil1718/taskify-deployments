@@ -5,6 +5,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { Task } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Calendar, MoreHorizontal } from "lucide-react";
+import { formatFullDate } from "@/lib/format";
 
 interface TaskCardProps {
   task: Task;
@@ -91,18 +92,13 @@ export function TaskCard({ task, onClick, index }: TaskCardProps) {
 
       <div className="mt-2 flex items-center justify-end border-t border-slate-100 pt-3">
         {task.dueDate && (
-          <div className="flex items-center gap-1.5 text-xs font-medium text-slate-400 bg-slate-50 px-2 py-1 rounded-md">
+          <div
+            className="flex items-center gap-1.5 text-xs font-medium text-slate-400 bg-slate-50 px-2 py-1 rounded-md"
+            title={new Date(task.dueDate).toISOString()}
+          >
             <Calendar size={12} />
             <span>
-              {new Date(task.dueDate).toLocaleDateString(undefined, {
-                month: "short",
-                day: "numeric",
-              })}
-              {", "}
-              {new Date(task.dueDate).toLocaleTimeString(undefined, {
-                hour: "numeric",
-                minute: "2-digit",
-              })}
+              {formatFullDate(task.dueDate)}
             </span>
           </div>
         )}

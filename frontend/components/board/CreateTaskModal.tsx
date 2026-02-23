@@ -46,13 +46,16 @@ export function CreateTaskModal({
       const lastRank = tasks.at(-1)?.rank ?? null;
       const [rank] = lexorank.insert(lastRank, null);
 
+      
+      const formatDeadline = new Date(deadline).toISOString()
+
       await dispatch(
         addTaskAsync({
           listId: columnId,
           rank,
           title,
           description,
-          deadline: deadline || undefined,
+          deadline: formatDeadline|| undefined,
         }),
       ).unwrap();
       toast.success("Task created successfully");

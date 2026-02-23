@@ -3,12 +3,16 @@
 import { useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
-import { markSeen } from "@/lib/api/notifications";
+import { formatMessageDates } from "@/lib/format";
+import { useAppDispatch } from "@/store/hooks";
+import { addNotification } from "@/store/slices/notificationSlice";
 
 interface RealtimeNotification {
     id: number;
     text: string;
     is_seen: boolean;
+    task_id: number;
+    created_at: string;
 }
 
 /**
@@ -20,6 +24,8 @@ interface RealtimeNotification {
  * Must be mounted after the user is authenticated (token in localStorage).
  */
 export function useNotifications() {
+    const dispatch = useAppDispatch();
+
     useEffect(() => {
         const token =
             typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -39,15 +45,14 @@ export function useNotifications() {
                 },
                 (payload) => {
                     const notification = payload.new as RealtimeNotification;
+
+                    // Dispatch to Redux store for real-time unread count updates
+                    dispatch(addNotification(notification));
+
                     if (!notification.is_seen) {
-                        toast.info(notification.text, {
+                        toast.info(formatMessageDates(notification.text), {
                             duration: 6000,
                             description: "Task deadline approaching",
-                        });
-
-                        // Mark as seen immediately after displaying the toast
-                        markSeen(notification.id).catch(() => {
-                            // Silently ignore — endpoint may not be live yet
                         });
                     }
                 }
