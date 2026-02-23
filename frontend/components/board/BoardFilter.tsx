@@ -47,9 +47,9 @@ export function BoardFilter({ filters, onFilterChange }: BoardFilterProps) {
     const hasActiveFilters = filters.search || filters.labels.length > 0 || filters.sortBy !== "rank";
 
     return (
-        <div className="flex flex-col sm:flex-row gap-3 items-center mb-4 w-full">
+        <div className="flex flex-col sm:flex-row gap-3 items-center mb-4 w-full justify-between">
             {/* Search Bar */}
-            <div className="relative flex-1 w-full">
+            <div className="relative flex-1 sm:max-w-xs w-full">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-400" />
                 <Input
                     placeholder="Filter tasks..."
@@ -59,7 +59,7 @@ export function BoardFilter({ filters, onFilterChange }: BoardFilterProps) {
                 />
             </div>
 
-            <div className="flex gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+            <div className="flex gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0 sm:ml-auto">
                 {/* Label Filter Popover - Reusing LabelPicker logic but for filtering */}
                 <div className="min-w-[150px]">
                     <LabelPicker
@@ -75,7 +75,7 @@ export function BoardFilter({ filters, onFilterChange }: BoardFilterProps) {
                         <SelectValue placeholder="Sort by" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="rank">Custom Order</SelectItem>
+                        <SelectItem value="rank">Sort</SelectItem>
                         <SelectItem value="dueDate">Due Date</SelectItem>
                         <SelectItem value="title">Alphabetical</SelectItem>
                     </SelectContent>

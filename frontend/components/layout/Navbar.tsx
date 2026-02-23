@@ -1,6 +1,6 @@
 'use client';
 
-import { Search, User, Menu } from 'lucide-react';
+import { User, Menu } from 'lucide-react';
 import { useSidebar } from '@/components/providers/SidebarProvider';
 import { NotificationPopover } from './NotificationPopover';
 
@@ -16,14 +16,6 @@ export function Navbar() {
                 >
                     <Menu size={24} />
                 </button>
-                <div className="relative hidden sm:block">
-                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
-                    <input
-                        type="text"
-                        placeholder="Search tasks..."
-                        className="h-9 w-64 rounded-xl border border-slate-200 bg-slate-50/50 pl-9 pr-4 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-indigo-500/50 focus:bg-white focus:ring-2 focus:ring-indigo-500/20"
-                    />
-                </div>
             </div>
 
             <div className="flex items-center gap-4">
