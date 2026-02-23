@@ -46,7 +46,7 @@ export function CreateTaskModal({
             const lastRank = tasks.at(-1)?.rank ?? null;
             const [rank] = lexorank.insert(lastRank, null);
 
-            const formatDeadline = new Date(deadline).toISOString()
+            const formatDeadline = deadline !== "" ? new Date(deadline).toISOString() : null;
 
             await dispatch(
                 addTaskAsync({

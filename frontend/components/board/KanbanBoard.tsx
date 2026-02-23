@@ -37,6 +37,9 @@ const lexorank = new Lexorank();
 export function KanbanBoard({ boardId }: KanbanBoardProps) {
     const dispatch = useAppDispatch();
     const { columns, tasks } = useAppSelector((state) => state.board.data);
+
+    // TODO: fix cannot add list console.log("COLUMNS", columns);
+
     const [activeColumn, setActiveColumn] = useState<Column | null>(null);
     const [activeTask, setActiveTask] = useState<Task | null>(null);
     const [selectedTask, setSelectedTask] = useState<Task | null>(null);
