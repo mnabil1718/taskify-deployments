@@ -32,7 +32,7 @@ export async function getNotifications(): Promise<Notification[]> {
     return response.data ?? [];
 }
 
-// PATCH /notification/:id/seen — mark a single notification as seen
+// PUT /notification/inbox/:id — mark a single notification as seen
 export async function markSeen(id: number): Promise<void> {
-    await apiFetch(`/notification/${id}/seen`, { method: "PATCH" });
+    await apiFetch(`/notification/inbox/${id}`, { method: "PUT" });
 }

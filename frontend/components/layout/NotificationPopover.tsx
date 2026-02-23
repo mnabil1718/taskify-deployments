@@ -128,9 +128,6 @@ export function NotificationPopover() {
                             {unreadCount > 9 ? "9+" : unreadCount}
                         </span>
                     )}
-                    {unreadCount === 0 && (
-                        <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white" />
-                    )}
                 </button>
             </PopoverTrigger>
 
@@ -292,8 +289,8 @@ export function NotificationPopover() {
                                             key={preset}
                                             onClick={() => setDays(preset)}
                                             className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors border ${days === preset
-                                                    ? "bg-indigo-600 text-white border-indigo-600"
-                                                    : "bg-white text-slate-600 border-slate-200 hover:border-indigo-300 hover:text-indigo-600"
+                                                ? "bg-indigo-600 text-white border-indigo-600"
+                                                : "bg-white text-slate-600 border-slate-200 hover:border-indigo-300 hover:text-indigo-600"
                                                 }`}
                                         >
                                             {preset === 0 ? "Same day" : `${preset}d`}

@@ -57,7 +57,7 @@ export async function markNotificationAsSeen(supabase: SupabaseClient<Database>,
 }
 
 export async function getAllNotifications(supabase: SupabaseClient<Database>): Promise<Notification[]> {
-    const { data, error } = await supabase.from("notifications").select();
+    const { data, error } = await supabase.from("notifications").select().order("created_at", { ascending: false });
     if (error) throw error;
     return data || [];
 }

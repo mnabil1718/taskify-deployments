@@ -11,6 +11,7 @@ export const postLists = async (req: Request, res: Response) => {
     const supabase = (req as any).supabase;
     const { title, board_id, position } = req.body;
 
+
     // Ignore request position, calculate from DB
     const last = await getLastList(supabase, board_id);
 
