@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,104 +17,102 @@ import { toast } from "sonner";
 import { Lexorank } from "@/lib/lexorank";
 
 interface CreateTaskModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  columnId: number;
+    isOpen: boolean;
+    onClose: () => void;
+    columnId: number;
 }
 
 const lexorank = new Lexorank();
 
 export function CreateTaskModal({
-  isOpen,
-  onClose,
-  columnId,
+    isOpen,
+    onClose,
+    columnId,
 }: CreateTaskModalProps) {
-  const dispatch = useAppDispatch();
-  const tasks = useAppSelector(selectTasksByListId(columnId));
+    const dispatch = useAppDispatch();
+    const tasks = useAppSelector(selectTasksByListId(columnId));
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [deadline, setDeadline] = useState("");
-  const [loading, setLoading] = useState(false);
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [deadline, setDeadline] = useState("");
+    const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async () => {
-    if (!title.trim() || !columnId) return;
+    const handleSubmit = async () => {
+        if (!title.trim() || !columnId) return;
 
-    setLoading(true);
-    try {
-      // TODO: handle re-indexing later
-      const lastRank = tasks.at(-1)?.rank ?? null;
-      const [rank] = lexorank.insert(lastRank, null);
+        setLoading(true);
+        try {
+            // TODO: handle re-indexing later
+            const lastRank = tasks.at(-1)?.rank ?? null;
+            const [rank] = lexorank.insert(lastRank, null);
 
-      
-      const formatDeadline = new Date(deadline).toISOString()
+            const formatDeadline = new Date(deadline).toISOString()
 
-      await dispatch(
-        addTaskAsync({
-          listId: columnId,
-          rank,
-          title,
-          description,
-          deadline: formatDeadline|| undefined,
-        }),
-      ).unwrap();
-      toast.success("Task created successfully");
-      setTitle("");
-      setDescription("");
-      setDeadline("");
-      onClose();
-    } catch (error) {
-      toast.error("Failed to create task");
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+            await dispatch(
+                addTaskAsync({
+                    listId: columnId,
+                    rank,
+                    title,
+                    description,
+                    deadline: formatDeadline || undefined,
+                }),
+            ).unwrap();
+            toast.success("Task created successfully");
+            setTitle("");
+            setDescription("");
+            setDeadline("");
+            onClose();
+        } catch (error) {
+            toast.error("Failed to create task");
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Create New Task</DialogTitle>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid gap-2">
-            <Input
-              id="title"
-              placeholder="Task title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-          </div>
-          <div className="grid gap-2">
-            <Textarea
-              id="description"
-              placeholder="Description (optional)"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </div>
-          <div className="grid gap-2">
-            <label htmlFor="deadline" className="text-sm font-medium text-slate-700">Due Date & Time</label>
-            <Input
-              id="deadline"
-              type="datetime-local"
-              value={deadline}
-              onChange={(e) => setDeadline(e.target.value)}
-              className="w-full"
-            />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose} disabled={loading}>
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} disabled={loading}>
-            {loading ? "Creating..." : "Create Task"}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
+    return (
+        <Dialog open={isOpen} onOpenChange={onClose}>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>Create New Task</DialogTitle>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                    <div className="grid gap-2">
+                        <Input
+                            id="title"
+                            placeholder="Task title"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                        />
+                    </div>
+                    <div className="grid gap-2">
+                        <Textarea
+                            id="description"
+                            placeholder="Description (optional)"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                        />
+                    </div>
+                    <div className="grid gap-2">
+                        <label htmlFor="deadline" className="text-sm font-medium text-slate-700">Due Date & Time</label>
+                        <Input
+                            id="deadline"
+                            type="datetime-local"
+                            value={deadline}
+                            onChange={(e) => setDeadline(e.target.value)}
+                            className="w-full"
+                        />
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button variant="outline" onClick={onClose} disabled={loading}>
+                        Cancel
+                    </Button>
+                    <Button onClick={handleSubmit} disabled={loading}>
+                        {loading ? "Creating..." : "Create Task"}
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
 }
-

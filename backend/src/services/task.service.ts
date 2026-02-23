@@ -14,7 +14,7 @@ export async function createTask(supabase: SupabaseClient<Database>, req: Create
         description: req.description ?? null,
         deadline: req.deadline ?? null,
         position: req.rank,
-    }).select().single();
+    }).select("*, rank:position").single();
 
     if (error) throw error;
 
